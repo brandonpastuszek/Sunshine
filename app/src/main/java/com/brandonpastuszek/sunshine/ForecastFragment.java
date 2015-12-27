@@ -1,22 +1,47 @@
 package com.brandonpastuszek.sunshine;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class ForecastFragment extends Fragment {
 
-    public MainActivityFragment() {
+    ArrayAdapter<String> mForecastAdapter;
+    public ForecastFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.forecastfragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_refresh) {
+            new FetchWeatherTask(mForecastAdapter).execute("32821");
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -30,9 +55,9 @@ public class MainActivityFragment extends Fragment {
                 "Weds - Cloudy - 72/63",
                 "Thurs - Asteroids - 75/65"
         };
-        List<String> weekForecast = Arrays.asList(forecastArray);
+        List<String> weekForecast = new ArrayList<>(Arrays.asList(forecastArray));
 
-        ArrayAdapter<String> mForecastAdapter = new ArrayAdapter<>(
+        mForecastAdapter = new ArrayAdapter<>(
                 getActivity(),
                 R.layout.list_item_forecast,
                 R.id.list_item_forecast_textview,
@@ -44,4 +69,5 @@ public class MainActivityFragment extends Fragment {
 
         return rootView;
     }
+
 }
